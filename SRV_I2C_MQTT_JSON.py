@@ -83,7 +83,14 @@ def on_write_i2c_message(client, userdata, msg):
         print("pin: " + str(json_msg['pin']) + " Value:" + str(json_msg['value']))
         bus.write_pin(json_msg['pin'], json_msg['value'])
     except KeyError as e:
-        print("on_write_i2c_message: Parse ERROR!!! JSON key incorrect: " + e.args[0])
+        print("on_write_i2c_message: Parse ERROR!!! JSON key not pin: " + e.args[0])
+
+    try:
+        json_msg = json.loads(msg.payload.decode("utf-8"))
+        print("mux: " + str(json_msg['mux']) + " Value:" + str(json_msg['value']))
+        bus.write_port(0, json_msg['value'])
+    except KeyError as e:
+        print("on_write_i2c_message: Parse ERROR!!! JSON key not mux: " + e.args[0])
     except ValueError:
         print("on_write_i2c_message: Parse ERROR!!! No JSON object to parse!")
 
